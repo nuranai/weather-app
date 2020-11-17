@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Weather App</title>
+        <link rel="stylesheet" href="./styles.css">
+    </head>
+    <body>
+        <!-- <button>get weather by coords</button> -->
+        <div>
+            <label>enter country:</label>
+            <input type="text" class="countrySearch" data-json="JsonCountries" placeholder="Search...">
+            <!-- li added with js -->
+            <ul class="countries">
+            </ul>
+        </div>
+        <div>
+            <label>enter city:</label>
+            <input type="text" class="citySearch" disabled placeholder="Search...">
+            <!-- li added with js -->
+            <ul class="cities">
+            </ul>
+        </div>
+        <script src="./app.js"></script>
+    </body>
+</html>
