@@ -2,60 +2,17 @@ window.addEventListener("load", Load);
 
 let JsonCities;
 let JsonCountries;
-let sortedJsonCountries = [];
-let sortedJsonCities = [];
+let sortedJsonCountries;
 
 async function Load() {
-    let response = await fetch('https://raw.githubusercontent.com/nuranai/weather-app/main/cities.list.json');
+    let response = await fetch('https://raw.githubusercontent.com/nuranai/weather-app/master/cities.list.json');
     JsonCities = await response.json();
 
-    response = await fetch('https://raw.githubusercontent.com/nuranai/weather-app/main/countries.json');
+    response = await fetch('https://raw.githubusercontent.com/nuranai/weather-app/master/countries.json');
     JsonCountries = await response.json();
 
-
-    function compareCity(a, b) {
-        if (a.country < b.country) {
-            return -1;
-        }
-        if (a.country > b.country) {
-            return 1;
-        }
-        return 0;
-    }
-
-    function compareCountry(a, b) {
-        if (a.country < b.country) {
-            return -1;
-        }
-        if (a.country > b.country) {
-            return 1;
-        }
-        return 0;
-    }
-
-    for (let i = 0; i < JsonCities.length - 1; i++) {
-        sortedJsonCities.push({
-            name : JsonCities[i].name,
-            country : JsonCities[i].country,
-            id : JsonCities[i].id
-        });
-    }
-
-    sortedJsonCities.sort(compareCity);
-    console.log(sortedJsonCities);
-// download(JSON.stringify(sortedJsonCities), 'jsonCities.txt', 'text/plain');
-download(JSON.stringify(JsonCountries), 'jsonCountries.txt', 'text/plain');
-
-    for (let i = 0; i < JsonCountries.length - 1; i++) {
-        sortedJsonCountries.push({
-            name : JsonCountries[i].name,
-            iso2 : JsonCountries[i].iso2
-        });
-    }
-
-    sortedJsonCountries.sort(compareCountry);
-    console.log(sortedJsonCountries);
-    download(JSON.stringify(sortedJsonCountries), 'jsonCountries.txt', 'text/plain');
+    response = await fetch('https://raw.githubusercontent.com/nuranai/weather-app/master/sortedJsonCountries');
+    sortedJsonCountries = await response.json();
 
     let latitude;
     let longitude;
@@ -193,17 +150,4 @@ function action() {
     }
 }
 
-// action();
-
-
-// const button = document.querySelector("button");
-// button.addEventListener("click", call);
-
-
-function download(content, fileName, contentType) {
-    var a = document.createElement("a");
-    var file = new Blob([content], { type: contentType });
-    a.href = URL.createObjectURL(file);
-    a.download = fileName;
-    a.click();
-}
+action();
