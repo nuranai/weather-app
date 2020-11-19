@@ -11,7 +11,7 @@ async function Load() {
     response = await fetch('https://raw.githubusercontent.com/nuranai/weather-app/master/countries.json');
     JsonCountries = await response.json();
 
-    response = await fetch('https://raw.githubusercontent.com/nuranai/weather-app/master/sortedJsonCountries');
+    response = await fetch('https://raw.githubusercontent.com/nuranai/weather-app/master/sortedJsonCountries.json');
     sortedJsonCountries = await response.json();
 
     let latitude;
@@ -117,6 +117,8 @@ function action() {
 
         let string = e.target.value;
 
+        let count = 0;
+
         buttonsSend = document.querySelectorAll(".sendRequest");
         for (let button of buttonsSend) {
             button.removeEventListener("click", sendWeatherRequest);
@@ -124,23 +126,44 @@ function action() {
 
         if (string != "") {
             let regex = new RegExp(string, "i");
-            for (let i = 0; i < JsonCities.length - 1; i++) {
-                if (JsonCities[i].country === iso2) {
-                    if (JsonCities[i].name.search(regex) + 1) {
-                        let newLi = document.createElement("li");
-
-                        newLi.innerHTML = `<span class="cityName" id="${JsonCities[i].id}">${JsonCities[i].name}</span>
-                                        <button class="sendRequest">=></button>`;
-
-                        cityList.append(newLi);
-                    }
-                    buttonsSend = document.querySelectorAll(".sendRequest");
-                    for (let button of buttonsSend) {
-                        button.addEventListener("click", sendWeatherRequest);
-                    }
+            let countryIndex = sortedJsonCountries.findIndex(country => {
+                if (country.iso2 === iso2) {
+                    return country;
                 }
+            });
 
+            for (let i = sortedJsonCountries[countryIndex].place.cityIndexStart; i < sortedJsonCountries[countryIndex].place.cityIndexEnd && count < 100; i++) {
+                if (JsonCities[i].name.search(regex) + 1) {
+                    let newLi = document.createElement("li");
+
+                    newLi.innerHTML = `<span class="cityName" id="${JsonCities[i].id}">${JsonCities[i].name}</span>
+                                    <button class="sendRequest">=></button>`;
+
+                    cityList.append(newLi);
+                    count++;
+                }
             }
+            buttonsSend = document.querySelectorAll(".sendRequest");
+            for (let button of buttonsSend) {
+                button.addEventListener("click", sendWeatherRequest);
+            }
+            // for (let i = 0; i < JsonCities.length - 1; i++) {
+            //     if (JsonCities[i].country === iso2) {
+            //         if (JsonCities[i].name.search(regex) + 1) {
+            // let newLi = document.createElement("li");
+
+            // newLi.innerHTML = `<span class="cityName" id="${JsonCities[i].id}">${JsonCities[i].name}</span>
+            //                 <button class="sendRequest">=></button>`;
+
+            // cityList.append(newLi);
+            //         }
+            // buttonsSend = document.querySelectorAll(".sendRequest");
+            // for (let button of buttonsSend) {
+            //     button.addEventListener("click", sendWeatherRequest);
+            // }
+            //     }
+
+            // }
         }
     }
 
