@@ -1,33 +1,70 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Weather App</title>
-        <link rel="stylesheet" href="./styles.css">
-    </head>
-    <body>
-        <!-- <button>get weather by coords</button> -->
-        <div>
-            <label>enter country:</label>
-            <input type="text" class="countrySearch" data-json="JsonCountries" placeholder="Search...">
-            <!-- li added with js -->
-            <ul class="countries">
-            </ul>
-        </div>
-        <div>
-            <label>enter city:</label>
-            <input type="text" class="citySearch" disabled placeholder="Search...">
-            <!-- li added with js -->
-            <ul class="cities">
-            </ul>
-        </div>
-        <section class="waether">
-            <div class="weather__current">
-                <h3>Current weather</h3>
-                
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <header>
+        <div class="wrapper">
+            <div class="inputs">
+                <label>Enter country:</label>
+                <input type="text" class="countrySearch" data-json="JsonCountries" placeholder="Search...">
+                <!-- li added with js -->
+                <ul class="countries">
+                </ul>
             </div>
-        </section>
-        <script src="./app.js"></script>
-    </body>
+            <div class="inputs">
+                <label>Enter city:</label>
+                <input type="text" class="citySearch" disabled placeholder="Search...">
+                <!-- li added with js -->
+                <ul class="cities">
+                </ul>
+            </div>
+        </div>
+        <div class="wrapper wrapper-radio">
+            <div>
+                <input type="radio" name="unit-switch" id="metric" value="metric">
+                <label for="metric">Metric: °C, m/s</label>
+            </div>
+            <div>
+                <input type="radio" name="unit-switch" id="imperial" value="imperial">
+                <label for="imperial">Imperial: °F, mph</label>
+            </div>
+        </div>
+    </header>
+    <section class="loading__screen">
+        <div class="loading__wrapper">
+            <div class="loading"></div>
+        </div>
+    </section>
+    <section class="weather">
+        <div class="weather__current">
+            <h3>Current weather</h3>
+            <p class="description__short"></p>
+            <div class="temperature__div">
+                <img>
+                <p class="temperature"></p>
+            </div>
+            <div class="description">
+                <div class="wind__div">
+                    <span class="compass""><i class=" fa fa-compass"></i></span>
+                    <p class="wind"></p>
+                </div>
+                <div class="info">
+                    <p class="hunidity"></p>
+                    <p class="pressure"></p>
+                    <p class="visibility"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="./app.js"></script>
+</body>
+
 </html>
