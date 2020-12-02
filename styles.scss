@@ -40,18 +40,11 @@ ul {
 }
 
 li {
-    display: flex;
-    justify-content: space-between;
+    cursor: pointer;
 }
 
-button {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: none;
-    background-color: purple;
-    color: white;
-    font-weight: 1000;
+li:hover {
+    background-color: #f3f3f3;
 }
 
 .wrapper-radio {

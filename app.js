@@ -4,6 +4,7 @@ let JsonCities;
 let JsonCountries;
 let sortedJsonCountries;
 let units = "metric";
+let lastLocation;
 let temperature = document.querySelector(".temperature");
 let descriptionShort = document.querySelector(".description__short");
 let compass = document.querySelector(".compass");
@@ -38,7 +39,8 @@ async function Load() {
     function success(pos) { //success handler
         latitude = pos.coords.latitude; //getting latitude if geo access granted
         longitude = pos.coords.latitude; //getting longitutde if geo access granted
-        getWeather(`lat=${latitude}&lon=${longitude}`);  
+        lastLocation = `lat=${latitude}&lon=${longitude}`;
+        getWeather(lastLocation);  
     }
 
     function err(error) { //error handler
@@ -55,12 +57,10 @@ async function Load() {
 function action() {
     let inputCountries = document.querySelector(".countrySearch");
     let countryList = document.querySelector(".countries");
-    let buttonsToCity; //buttons that granting access to city indexes
     inputCountries.addEventListener("input", updateCountryList); 
 
     let inputCities = document.querySelector(".citySearch");
     let cityList = document.querySelector(".cities");
-    let buttonsSend; //buttons that send info to openweather site
     let iso2; //iso code for chosen country
     inputCities.addEventListener("input", updateCityList);
 
@@ -73,19 +73,19 @@ function action() {
     function updateCountryList(e) {
         inputCities.disabled = true; //reseting access to city
 
-        buttonsToCity = document.querySelectorAll(".toCity"); //deleting listeners of current buttons in list
-        for (let button of buttonsToCity) {
-            button.removeEventListener("click", enableCityList);
+        let oldLiCountry = document.querySelectorAll(".countries"); //deleting listeners of current buttons in list
+        for (let li of oldLiCountry) {
+            li.removeEventListener("click", enableCityList);
+        }
+
+        let oldLiCity = document.querySelectorAll(".sendRequest"); //deleting listeners of buttons-info-senders in city list 
+        if (oldLiCity > 0) { 
+            for (let li of oldLiCity) {
+                li.removeEventListener("click", sendWeatherRequest);
+            }
         }
 
         countryList.innerHTML = ""; //clearing list
-
-        buttonsSend = document.querySelectorAll(".sendRequest"); //deleting listeners of buttons-info-senders in city list 
-        if (buttonsSend.length > 0) { 
-            for (let button of buttonsSend) {
-                button.removeEventListener("click", sendWeatherRequest);
-            }
-        }
 
         cityList.innerHTML = ""; //clearing city list
 
@@ -100,15 +100,11 @@ function action() {
 
                     newLi.innerHTML = `<div><span class="countryName">${JsonCountries[i].name}</span>
 <span class="flag">${JsonCountries[i].emoji}</span>
-<span class="countryIso">${JsonCountries[i].iso2}</span></div><button class="toCity">></button>`;
+<span class="countryIso">${JsonCountries[i].iso2}</span></div>`;
 
                     countryList.append(newLi);
+                    newLi.addEventListener("click", enableCityList);
                 }
-            }
-            //adding listeners to created buttons
-            buttonsToCity = document.querySelectorAll(".toCity");
-            for (let button of buttonsToCity) {
-                button.addEventListener("click", enableCityList);
             }
         }
     }
@@ -116,10 +112,14 @@ function action() {
     function enableCityList(e) {
         //on pressed button gives user access to ciy input
         document.querySelector(".citySearch").disabled = false;
-        inputCountries.value = e.target.parentNode.firstChild.firstChild.textContent;
+        inputCountries.value = e.target.firstChild.textContent;
+        let oldLiCountry = document.querySelectorAll(".countries"); //deleting listeners of current buttons in list
+        for (let li of oldLiCountry) {
+            li.removeEventListener("click", enableCityList);
+        }
         inputCities.value = "";
         countryList.innerHTML = "";
-        iso2 = e.target.previousSibling.lastChild.textContent;
+        iso2 = e.target.lastChild.textContent;
     }
 
     function updateCityList(e) {
@@ -129,10 +129,10 @@ function action() {
 
         let count = 0; //reseting count of elements
 
-        buttonsSend = document.querySelectorAll(".sendRequest");//deleting listeners of current buttons in list
-        for (let button of buttonsSend) {
-            button.removeEventListener("click", sendWeatherRequest);
-        }
+        let oldLiCity = document.querySelectorAll(".sendRequest"); //deleting listeners of buttons-info-senders in city list 
+            for (let li of oldLiCity) {
+                li.removeEventListener("click", sendWeatherRequest);
+            }
 
         if (string != "") {
             let regex = new RegExp(string, "i");//creating regexp for searching
@@ -143,35 +143,30 @@ function action() {
                 }
             });
             //searching first 100 cities by name
-            console.log(countryIndex);
             for (let i = sortedJsonCountries[countryIndex].place.cityIndexStart; i < sortedJsonCountries[countryIndex].place.cityIndexEnd && count < 100; i++) {
                 if (JsonCities[i].name.search(regex) + 1) {
                     let newLi = document.createElement("li");
 
-                    newLi.innerHTML = `<span class="cityName" id="${JsonCities[i].id}">${JsonCities[i].name}</span>
-                                    <button class="sendRequest">></button>`;
-
+                    newLi.innerHTML = `<span class="cityName" id="${JsonCities[i].id}">${JsonCities[i].name}</span>`;
+                    
                     cityList.append(newLi);
+                    newLi.addEventListener("click", sendWeatherRequest);
                     count++;
                 }
-            }
-                        //adding listeners to created buttons
-            buttonsSend = document.querySelectorAll(".sendRequest");
-            for (let button of buttonsSend) {
-                button.addEventListener("click", sendWeatherRequest);
             }
         }
     }
 
     function sendWeatherRequest(e) { //sending weather request by sity id of the chosen city
-        inputCities.value = e.target.previousElementSibling.textContent;
+        inputCities.value = e.target.textContent;
         buttonsSend = document.querySelectorAll(".sendRequest");//deleting listeners of current buttons in list
         for (let button of buttonsSend) {
             button.removeEventListener("click", sendWeatherRequest);
         }
         cityList.innerHTML = "";
-        cityId = e.target.previousElementSibling.id;
-        getWeather(`id=${cityId}`);
+        cityId = e.target.firstChild.id;
+        lastLocation = `id=${cityId}`;
+        getWeather(lastLocation);
     }
 
     function changeUnit() {
@@ -180,6 +175,9 @@ function action() {
         }
         else {
             units = 'imperial';
+        }
+        if (lastLocation) {
+            getWeather(lastLocation);
         }
     }
 }
