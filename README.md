@@ -15,6 +15,8 @@ To send request was used fetch() funciton.
 
 ## Demo
 
+https://nuranai.github.io/weather-app/
+
 ## Contacts
 
 Email: <bajanga07@gmail.com>
