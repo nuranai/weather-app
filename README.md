@@ -1,6 +1,6 @@
 # Weather App
 
-## Simple weather-app that shows current loacation 
+## Simple weather-app that shows current location 
 
 To get weather of location you can:
 
